@@ -20,7 +20,7 @@
             <p class="dev-description">Skip authentication for testing</p>
           </div>
         </div>
-        <button @click="handleDevLogin" class="dev-login-btn" :disabled="loading">
+        <button @click="goToDashboard" class="dev-login-btn" :disabled="loading">
           <span v-if="loading" class="btn-spinner"></span>
           <span v-else>Skip Auth (Dev Only)</span>
         </button>
@@ -215,19 +215,27 @@ const isValidEmail = (email) => {
   return re.test(email)
 }
 
+const goToDashboard = () => {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+    navigateTo('/dashboard')
+  }, 500)
+}
+
 const handleDevLogin = async () => {
   try {
     loading.value = true
     error.value = ''
     
-    await devLogin()
+    // Simple dev mode - just redirect to dashboard
+    await new Promise(resolve => setTimeout(resolve, 500))
     
-    // Show success and redirect
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    router.push('/dashboard')
+    // Use navigateTo instead of router.push for better Nuxt compatibility
+    await navigateTo('/dashboard')
   } catch (err) {
     console.error('Dev login failed:', err)
-    error.value = 'Dev login failed. Please try again.'
+    error.value = 'Failed to navigate to dashboard. Please try again.'
   } finally {
     loading.value = false
   }
