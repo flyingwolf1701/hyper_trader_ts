@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@auth/core": "^0.40.0",
+    "@pinia/nuxt": "^0.11.2",
     "@sidebase/nuxt-auth": "^1.0.1",
     "@simplewebauthn/browser": "^13.1.2",
     "@simplewebauthn/server": "^13.1.2",
