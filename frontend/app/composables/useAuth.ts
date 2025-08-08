@@ -31,7 +31,7 @@ export const useAuthCustom = () => {
         baseURL: config.public.apiBase,
         method: 'POST',
         body: { username }
-      })
+      }) as { options: any, userId: string }
       
       // Use WebAuthn browser API
       const { startAuthentication } = await import('@simplewebauthn/browser')
@@ -62,7 +62,7 @@ export const useAuthCustom = () => {
         baseURL: config.public.apiBase,
         method: 'POST',
         body: { username }
-      })
+      }) as { options: any, userId: string }
       
       // Complete passkey authentication
       const { startAuthentication } = await import('@simplewebauthn/browser')
@@ -94,7 +94,7 @@ export const useAuthCustom = () => {
         baseURL: config.public.apiBase,
         method: 'POST',
         body: { username, email }
-      })
+      }) as { options: any, userId: string, message: string }
       
       // Use WebAuthn browser API
       const { startRegistration } = await import('@simplewebauthn/browser')
@@ -104,7 +104,10 @@ export const useAuthCustom = () => {
       const finishResponse = await $fetch('/auth/passkey/register/finish', {
         baseURL: config.public.apiBase,
         method: 'POST',
-        body: { username, credential }
+        body: { 
+          userId: startResponse.userId, 
+          credential 
+        }
       })
       
       return finishResponse
@@ -120,11 +123,32 @@ export const useAuthCustom = () => {
         baseURL: config.public.apiBase,
         method: 'POST',
         body: { userId }
-      })
+      }) as { 
+        secret: string, 
+        qrCode: string, 
+        serviceName: string, 
+        accountName: string,
+        manualEntryKey: string 
+      }
       
       return response
     } catch (error) {
       console.error('TOTP setup failed:', error)
+      throw error
+    }
+  }
+  
+  const verifyTOTP = async (userId: string, token: string) => {
+    try {
+      const response = await $fetch('/auth/totp/verify-setup', {
+        baseURL: config.public.apiBase,
+        method: 'POST',
+        body: { userId, token }
+      }) as { success: boolean, message: string }
+      
+      return response
+    } catch (error) {
+      console.error('TOTP verification failed:', error)
       throw error
     }
   }
@@ -139,6 +163,7 @@ export const useAuthCustom = () => {
     loginWithFull,
     setupPasskey,
     setupTOTP,
+    verifyTOTP,
     isDevMode: config.public.devMode
   }
 }
