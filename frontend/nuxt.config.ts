@@ -1,26 +1,25 @@
 export default defineNuxtConfig({
+  compatibilityDate: '2025-08-08',
   modules: [
     '@sidebase/nuxt-auth',
     '@pinia/nuxt'
   ],
 
-  // Add these two lines to fix the port conflict and warning
   devServer: {
     port: 3001
   },
   
   auth: {
-    // @sidebase/nuxt-auth specific configuration
-    baseURL: process.env.AUTH_ORIGIN ,
+    baseURL: process.env.AUTH_ORIGIN || 'http://localhost:3001',
     provider: {
       type: 'authjs'
     },
     sessionRefresh: {
-      enablePeriodically: true,
-      enableOnWindowFocus: true,
+      enablePeriodically: false,
+      enableOnWindowFocus: false,
     },
     globalAppMiddleware: {
-      isEnabled: true
+      isEnabled: false  // Disable temporarily
     }
   },
   
