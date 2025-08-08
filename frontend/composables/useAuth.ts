@@ -1,4 +1,5 @@
-export const useAuth = () => {
+export const useAuthCustom = () => {
+  // Import the auth composable from @sidebase/nuxt-auth (auto-imported by Nuxt)
   const { data: session, status, signIn, signOut } = useAuth()
   const config = useRuntimeConfig()
   
@@ -86,7 +87,47 @@ export const useAuth = () => {
     }
   }
   
-  // ... rest of your existing methods
+  const setupPasskey = async (username: string, email: string) => {
+    try {
+      // Start registration
+      const startResponse = await $fetch('/auth/passkey/register/start', {
+        baseURL: config.public.apiBase,
+        method: 'POST',
+        body: { username, email }
+      })
+      
+      // Use WebAuthn browser API
+      const { startRegistration } = await import('@simplewebauthn/browser')
+      const credential = await startRegistration(startResponse.options)
+      
+      // Finish registration
+      const finishResponse = await $fetch('/auth/passkey/register/finish', {
+        baseURL: config.public.apiBase,
+        method: 'POST',
+        body: { username, credential }
+      })
+      
+      return finishResponse
+    } catch (error) {
+      console.error('Passkey setup failed:', error)
+      throw error
+    }
+  }
+  
+  const setupTOTP = async (userId: string) => {
+    try {
+      const response = await $fetch('/auth/totp/setup', {
+        baseURL: config.public.apiBase,
+        method: 'POST',
+        body: { userId }
+      })
+      
+      return response
+    } catch (error) {
+      console.error('TOTP setup failed:', error)
+      throw error
+    }
+  }
   
   return {
     session,
