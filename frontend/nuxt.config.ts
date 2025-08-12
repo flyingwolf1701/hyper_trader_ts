@@ -15,11 +15,11 @@ export default defineNuxtConfig({
       type: 'authjs'
     },
     sessionRefresh: {
-      enablePeriodically: false,
-      enableOnWindowFocus: false,
+      enablePeriodically: true,
+      enableOnWindowFocus: true,
     },
     globalAppMiddleware: {
-      isEnabled: false  // Disable temporarily
+      isEnabled: false  // Keep disabled for now, we'll use custom middleware
     }
   },
   
@@ -27,6 +27,8 @@ export default defineNuxtConfig({
     authSecret: process.env.NUXT_AUTH_SECRET,
     // Server-side only
     jwtSecret: process.env.JWT_SECRET,
+    githubClientId: process.env.GITHUB_CLIENT_ID,
+    githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
     
     public: {
       authBaseURL: process.env.NUXT_PUBLIC_AUTH_BASE_URL,
@@ -37,4 +39,4 @@ export default defineNuxtConfig({
       origin: process.env.NUXT_PUBLIC_ORIGIN,
     }
   },
-})
+})      

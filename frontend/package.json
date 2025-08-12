@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "hypertrader",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,12 +12,7 @@
   "dependencies": {
     "@auth/core": "^0.40.0",
     "@pinia/nuxt": "^0.11.2",
-    "@sidebase/nuxt-auth": "^1.0.1",
-    "@simplewebauthn/browser": "^13.1.2",
-    "@simplewebauthn/server": "^13.1.2",
     "nuxt": "^4.0.1",
-    "otplib": "^12.0.1",
-    "qrcode": "^1.5.4",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   }
